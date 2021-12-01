@@ -30,4 +30,12 @@ export class AuthController {
       return res.status(500).json({ message: 'Login failed server error' })
     }
   }
+
+  async consentGranted(req: Request<{}, {}, IAuthController>, res: Response){
+    try{
+
+    }catch(e){
+      return res.status(500).json({message:"consent failed"})
+    }
+  }
 }

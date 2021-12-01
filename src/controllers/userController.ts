@@ -3,6 +3,7 @@ import { User } from '../entities/user'
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
 import { hashIt } from '../utils/password'
+import { SessionCreateService } from '../services/Session/create'
 
 interface CreateUserRequest {
   email: string
@@ -17,6 +18,8 @@ export default class UserController {
       const userRepository = getRepository(User)
       user.email = email
       user.password = hashIt(password)
+      const session = await SessionCreateService.execute();
+      user.session = session;
       await userRepository.save(user)
       console.log('user', user)
       return res.json(user)
