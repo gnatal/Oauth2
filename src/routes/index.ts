@@ -15,10 +15,7 @@ routes.get('/healt', (req, res) => {
   res.send('app is working')
 })
 
-routes.get('/tokenHealth', (req, res) => {
-  console.log('app is working with token')
-  res.send('app is working')
-})
+routes.get('/tokenHealth', authController.tokenAuthentication)
 
 
 routes.post('/user', userController.create)

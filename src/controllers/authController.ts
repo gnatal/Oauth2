@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm'
 import { User } from '../entities/user'
 import { compareIt, hashIt } from '../utils/password'
 import { compare } from 'bcrypt'
+import { ExtractTokenFromHeadersService } from '../services/Auth/extractToken'
 
 interface IAuthController {
   email: string
@@ -39,4 +40,13 @@ export class AuthController {
     }
   }
   
+  async tokenAuthentication(req: Request<{}, {}, {}>, res: Response){
+    try{
+      const token = ExtractTokenFromHeadersService.execute(req)
+      return res.status(200).json({token});
+    }catch(e){
+      return res.status(500).json({token:"not found"});
+    }
+  }
+
 }
