@@ -38,4 +38,5 @@ export class AuthController {
       return res.status(500).json({message:"consent failed"})
     }
   }
+  
 }
