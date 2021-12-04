@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
-
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
+import { ClientScope } from './clientScopes'
 @Entity()
 export class Client {
   @PrimaryGeneratedColumn()
@@ -15,5 +15,16 @@ export class Client {
   client_name: string;
 
   @Column()
-  redirect_uri: string
+  redirect_url: string;
+  
+  @Column()
+  token_url: string;
+
+  @Column()
+  api_base_url: string;
+
+  @OneToOne(() => ClientScope)
+  @JoinColumn()
+  scopes:ClientScope
+  
 }

@@ -7,6 +7,6 @@ export class SessionTokenService{
     static async execute(session:Session){
         const now = (new Date()).getTime();
         const hasExpired = (Number(session.token) - now) > 0
-        return  false;
+        return  hasExpired;
     }
 }

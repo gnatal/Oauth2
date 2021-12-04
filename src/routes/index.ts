@@ -9,6 +9,7 @@ const authController = new AuthController()
 const routes = Router()
 
 routes.post('/auth', authController.login)
+routes.post('/access_token', authController.validateAuthcode)
 
 routes.get('/healt', (req, res) => {
   console.log('app is working')

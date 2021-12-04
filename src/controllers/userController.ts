@@ -27,4 +27,15 @@ export default class UserController {
       console.log('err', err)
     }
   }
+
+  async info (req: Request<{}, {}, CreateUserRequest>, res: Response) {
+    try {
+      const { email } = req.body
+      const userRepository = getRepository(User)
+      const user = await userRepository.findOne({email})
+      return res.json(user)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
 }

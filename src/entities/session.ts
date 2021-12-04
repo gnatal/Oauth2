@@ -6,17 +6,40 @@ export class Session {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({
+    nullable:true
+  })
+  auth_code: string;
+
+  @Column({
+    nullable:true
+  })
+  auth_code_used: boolean;
+
+  @Column({
+    nullable:true
+  })
+  pkce_hash: string;
+
+  @Column({
+    nullable:true
+  })
   token: string
 
-  @Column("double")
+  @Column("double",{
+    nullable:true
+  })
   tokenExpirationDate: number;
 
 
-  @Column()
+  @Column({
+    nullable:true
+  })
   refreshToken: string
 
-  @Column("double")
+  @Column("double",{
+    nullable:true
+  })
   refreshTokenExpirationDate: number;
 
 }

@@ -1,20 +1,15 @@
 import { Session } from "../../entities/session";
 import { generateRandomString } from "../../utils/randomStringGenerator";
 import { getRepository } from 'typeorm'
-import  {secondsToTimestamp} from '../../utils/timestampToSeconds'
 
-const tokenLife = process.env.TOKEN_DURATION_SECONDS as string
-const DAY_IN_SECONDS = process.env.DAY_IN_SECONDS as string
-const refreshTokenLife = Number(DAY_IN_SECONDS)*7;
 export class SessionCreateService{
 
-    static async execute(){
+    static async execute(pkce_hash:string){
         const session = new Session();
-        session.token = generateRandomString(20);
-        session.tokenExpirationDate = (new Date()).getTime() + secondsToTimestamp(Number(tokenLife));
-        session.refreshToken = generateRandomString(32);
-        session.refreshTokenExpirationDate = (new Date()).getTime() + secondsToTimestamp(refreshTokenLife); // a week
         const sessionRepository = getRepository(Session);
+        session.auth_code = generateRandomString(20)
+        session.pkce_hash = pkce_hash;
+        session.auth_code_used = false;
         await sessionRepository.save(session)
         return  session;
     }
