@@ -5,5 +5,7 @@ export class ClientScope {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column()
+  scopeName: string;
   
 }

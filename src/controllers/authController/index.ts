@@ -1,15 +1,13 @@
 import sha256 from 'crypto-js/sha256';
-import { Request, Response } from 'express'
-import { getRepository } from 'typeorm'
-import { User } from '../entities/user'
-import { Session } from '../entities/session'
-import { compareIt, hashIt } from '../utils/password'
-import { compare } from 'bcrypt'
-import { ExtractTokenFromHeadersService } from '../services/Auth/extractToken'
-import { authenticatePKCE } from '../utils/pkce'
-import { SessionCreateTokenService } from '../services/Session/createTokens'
-import { generateRandomString } from '../utils/randomStringGenerator'
-import { SessionCreateService } from '../services/Session/create'
+import { Request, Response } from 'express';
+import { getRepository } from 'typeorm';
+import { Session } from '../../entities/session';
+import { User } from '../../entities/user';
+import { ExtractTokenFromHeadersService } from '../../services/Auth/extractToken';
+import { SessionCreateService } from '../../services/Session/create';
+import { SessionCreateTokenService } from '../../services/Session/createTokens';
+import { compareIt } from '../../utils/password';
+import { authenticatePKCE } from '../../utils/pkce';
 
 interface IAuthController {
   email: string
@@ -29,7 +27,7 @@ export class AuthController {
       }
       if (compareIt(password, user.password)) {
         const session = await SessionCreateService.execute(pkce_hash);
-        return res.status(200).json({ authCode: session.auth_code })
+        return res.status(200).json({ authCode: session.authCode })
       } else {
         return res.status(401).json({ message: 'Login failed password wrong' })
       }
@@ -39,12 +37,30 @@ export class AuthController {
     }
   }
 
-  async validateAuthcode(req: Request<{},{},any>, res: Response){
+  async validateAuthcodeSPA(req: Request<{},{},any>, res: Response){
     try{
-      const {authCode, pkce } = req.body;
+      const {authCode, pkce, client_id } = req.body;
       const sessionRepository = getRepository(Session);
-      const session = await sessionRepository.findOneOrFail({auth_code: authCode, pkce_hash: sha256(pkce).toString()})
-      if(authenticatePKCE(pkce, session.pkce_hash)){
+      const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
+      if(authenticatePKCE(pkce, session.pkceHash)){
+        SessionCreateTokenService.execute(session)
+      }
+      return res.status(200).json({
+        accessToken: session.token,
+        refreshToken: session.refreshToken
+      })
+    }catch(e){
+      console.log(e)
+      return res.status(500).json({message:"error"})
+    }
+  }
+
+  async validateAuthcodeServer(req: Request<{},{},any>, res: Response){
+    try{
+      const {authCode, pkce, client_secret, client_id } = req.body;
+      const sessionRepository = getRepository(Session);
+      const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
+      if(authenticatePKCE(pkce, session.pkceHash)){
         SessionCreateTokenService.execute(session)
       }
       return res.status(200).json({

@@ -9,17 +9,17 @@ export class Session {
   @Column({
     nullable:true
   })
-  auth_code: string;
+  authCode: string;
 
   @Column({
     nullable:true
   })
-  auth_code_used: boolean;
+  authCodeUsed: boolean;
 
   @Column({
     nullable:true
   })
-  pkce_hash: string;
+  pkceHash: string;
 
   @Column({
     nullable:true

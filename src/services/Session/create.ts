@@ -4,12 +4,12 @@ import { getRepository } from 'typeorm'
 
 export class SessionCreateService{
 
-    static async execute(pkce_hash:string){
+    static async execute(pkceHash:string){
         const session = new Session();
         const sessionRepository = getRepository(Session);
-        session.auth_code = generateRandomString(20)
-        session.pkce_hash = pkce_hash;
-        session.auth_code_used = false;
+        session.authCode = generateRandomString(20)
+        session.pkceHash = pkceHash;
+        session.authCodeUsed = false;
         await sessionRepository.save(session)
         return  session;
     }

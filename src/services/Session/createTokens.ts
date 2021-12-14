@@ -16,7 +16,7 @@ export class SessionCreateTokenService{
         session.refreshTokenExpirationDate = (new Date()).getTime() + secondsToTimestamp(refreshTokenLife); // a week
         const sessionRepository = getRepository(Session);
         await sessionRepository.save(session)
-        session.auth_code_used = true;
+        session.authCodeUsed = true;
         return  session;
     }
 }

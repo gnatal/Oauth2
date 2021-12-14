@@ -9,22 +9,22 @@ export class Client {
   secret: string
 
   @Column()
-  client_id: string
+  clientId: string
 
   @Column()
-  client_name: string;
+  clientSecret: string
 
   @Column()
-  redirect_url: string;
+  name: string;
   
   @Column()
-  token_url: string;
+  redirectUrl: string;
 
   @Column()
-  api_base_url: string;
+  isSpa: boolean;
 
   @OneToOne(() => ClientScope)
   @JoinColumn()
-  scopes:ClientScope
+  scope:ClientScope
   
 }

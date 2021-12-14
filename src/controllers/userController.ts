@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt'
 import { User } from '../entities/user'
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm'
@@ -18,7 +17,7 @@ export default class UserController {
       const userRepository = getRepository(User)
       user.email = email
       user.password = hashIt(password)
-      const session = await SessionCreateService.execute();
+      const session = await SessionCreateService.execute('213');
       user.session = session;
       await userRepository.save(user)
       console.log('user', user)
