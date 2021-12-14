@@ -12,9 +12,6 @@ export class Client {
   clientId: string
 
   @Column()
-  clientSecret: string
-
-  @Column()
   name: string;
   
   @Column()

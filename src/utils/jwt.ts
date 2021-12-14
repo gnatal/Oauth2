@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken';
 
-export const encode = (payload:string):string =>{
+interface IJwtPayload {
+    userId:string;
+    clientId:string;
+}
+
+export const encode = (payload:IJwtPayload):string =>{
     return jwt.sign(payload, 's3cret');
 }
 

@@ -12,7 +12,7 @@ export default class ClientScopeController{
         try{
 
             const {name} = req.body;
-            const scope = createScopeService.execute(name);
+            const scope = await createScopeService.execute(name);
             return res.status(201).json(scope);
         }catch(e){
             return res.status(400).json(e);

@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm';
 import { Session } from '../../entities/session';
 import { User } from '../../entities/user';
 import { ExtractTokenFromHeadersService } from '../../services/Auth/extractToken';
+import CheckClientIdentityService from '../../services/clientService/checkClientIdentity';
 import { SessionCreateService } from '../../services/Session/create';
 import { SessionCreateTokenService } from '../../services/Session/createTokens';
 import { compareIt } from '../../utils/password';
@@ -58,6 +59,7 @@ export class AuthController {
   async validateAuthcodeServer(req: Request<{},{},any>, res: Response){
     try{
       const {authCode, pkce, client_secret, client_id } = req.body;
+      await CheckClientIdentityService.execute(client_id, client_secret);
       const sessionRepository = getRepository(Session);
       const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
       if(authenticatePKCE(pkce, session.pkceHash)){
