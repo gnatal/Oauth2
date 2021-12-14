@@ -44,7 +44,7 @@ export class AuthController {
       const sessionRepository = getRepository(Session);
       const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
       if(authenticatePKCE(pkce, session.pkceHash)){
-        SessionCreateTokenService.execute(session)
+        SessionCreateTokenService.execute(session,client_id,"")
       }
       return res.status(200).json({
         accessToken: session.token,
@@ -63,7 +63,7 @@ export class AuthController {
       const sessionRepository = getRepository(Session);
       const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
       if(authenticatePKCE(pkce, session.pkceHash)){
-        SessionCreateTokenService.execute(session)
+        SessionCreateTokenService.execute(session,client_id, "1")
       }
       return res.status(200).json({
         accessToken: session.token,
