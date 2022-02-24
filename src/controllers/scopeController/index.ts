@@ -1,7 +1,7 @@
-import { ClientScope } from "../entities/clientScopes";
+import { ClientScope } from "../../entities/clientScopes";
 import { Request, Response } from 'express'
 import { getRepository } from "typeorm";
-import createScopeService from "../services/Scope/create";
+import createScopeService from "../../services/Scope/create";
 
 interface ClienteScopeRequest{
     name:string;

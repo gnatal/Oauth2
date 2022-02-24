@@ -26,10 +26,10 @@ export class Session {
   })
   token: string
 
-  @Column("double",{
-    nullable:true
-  })
-  tokenExpirationDate: number;
+  // @Column("double",{
+  //   nullable:true
+  // })
+  // tokenExpirationDate: number;
 
 
   @Column({
@@ -37,9 +37,9 @@ export class Session {
   })
   refreshToken: string
 
-  @Column("double",{
-    nullable:true
-  })
-  refreshTokenExpirationDate: number;
+  // @Column("double",{
+  //   nullable:true
+  // })
+  // refreshTokenExpirationDate: number;
 
 }
