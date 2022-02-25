@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-const tokenLife = process.env.TOKEN_DURATION_SECONDS as string
-
+import {unauthorized} from './error';
 interface IJwtPayload {
     userId:string;
     clientId:string;
@@ -16,7 +14,6 @@ interface IJwtPayload {
 
 export const encode = (payload:IJwtPayload, expiresIn: number):string =>{
     return jwt.sign(payload, 's3cret', {
-        algorithm: 'ES256',
         expiresIn,
     });
 }
@@ -28,7 +25,14 @@ export const encode = (payload:IJwtPayload, expiresIn: number):string =>{
  */
 
 export const decode = (token:string): string | jwt.JwtPayload =>{
-    return jwt.verify(token,'s3cret',{
-        algorithms: ['ES256']
-    });
+    try{
+        return jwt.verify(token,'s3cret');
+    }
+    catch(e){
+        if(e instanceof jwt.TokenExpiredError){
+            throw unauthorized('token expired');
+        }
+        console.log('ERROR DECODING',e);
+        return {};
+    }
 }

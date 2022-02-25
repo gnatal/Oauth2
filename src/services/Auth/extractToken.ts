@@ -7,9 +7,11 @@ export class ExtractTokenFromHeadersService{
      * @param req => request
      * @returns the token from the request headers
      */
-    static execute(req: Request<{},{},{}>){
+    static execute(req: Request<{},{},{}>): string{
         const headers = {...req.headers}
-        return headers.authorization?.split(" ")[1];
+        if(headers.authorization)
+            return headers.authorization?.split(" ")[1];
+        return "";
     }
 
 }
