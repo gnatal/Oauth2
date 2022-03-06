@@ -7,7 +7,7 @@ import { ExtractTokenFromHeadersService } from '../../services/Auth/extractToken
 import CheckClientIdentityService from '../../services/clientService/checkClientIdentity';
 import { SessionCreateService } from '../../services/Session/create';
 import { SessionCreateTokenService } from '../../services/Session/createTokens';
-import { decode } from '../../utils/jwt';
+import { decode, IJwtPayload } from '../../utils/jwt';
 import { compareIt } from '../../utils/password';
 import { authenticatePKCE } from '../../utils/pkce';
 import { IErrorUnauthorized } from '../../utils/error';
@@ -47,7 +47,7 @@ export class AuthController {
       const {authCode, pkce, client_id, user_id } = req.body;
       const sessionRepository = getRepository(Session);
       // const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
-      const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: pkce})
+      const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: pkce, relations: ["user"]})
       // if(authenticatePKCE(pkce, session.pkceHash)){
       // }
       SessionCreateTokenService.execute(session,client_id,user_id)
@@ -95,6 +95,19 @@ export class AuthController {
         return res.status(e.status).json({message: e.message, error: e.error});
     }
     return res.status(400).json({error: "unknown error"});
+  }
+
+  async logout(req: Request<{}, {}, {}>, res: Response){
+    try{
+      const token = ExtractTokenFromHeadersService.execute(req)
+      const sessionRepository = getRepository(Session);
+      const session = await sessionRepository.findOneOrFail({token: token});
+      sessionRepository.delete(session);
+      return res.status(200).json({message: "logout success", session});
+    }catch(e){
+      console.log('ERROR LOGINT OUT',e);
+      return res.status(500).json({message:"logout failed"})
+    }
   }
 
 }

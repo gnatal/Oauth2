@@ -13,6 +13,7 @@ const scopeController = new ScopeController()
 const routes = Router()
 
 routes.post('/auth', authController.login)
+routes.get('/logout', authController.logout)
 routes.post('/access_token', authController.validateAuthcodeSPA)
 
 routes.post('/client',clientController.create);

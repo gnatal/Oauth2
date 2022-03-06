@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import {unauthorized} from './error';
-interface IJwtPayload {
+export interface IJwtPayload {
     userId:string;
     clientId:string;
 }
