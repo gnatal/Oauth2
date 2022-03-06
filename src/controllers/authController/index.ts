@@ -24,13 +24,15 @@ export class AuthController {
     try {
       const { email, password, pkce_hash } = req.body
       const userRepository = getRepository(User)
-      const user = await userRepository.findOne({ where: { email } })
+      const user = await userRepository.findOne({ where: { email }, relations: ["sessions"] })
       if (!user) {
         return res.status(401).json({ message: 'Login failed user not found' })
       }
       if (compareIt(password, user.password)) {
         const session = await SessionCreateService.execute(pkce_hash);
-        return res.status(200).json({ authCode: session.authCode })
+        user.sessions = [...user.sessions, session];
+        userRepository.save(user);
+        return res.status(200).json({ authCode: session.authCode, user: user })
       } else {
         return res.status(401).json({ message: 'Login failed password wrong' })
       }

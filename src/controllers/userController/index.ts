@@ -10,7 +10,6 @@ export default class UserController {
     try {
       const { email, password } = req.body
       const user = await CreateUserService.execute(email, password);
-      console.log('user', user)
       return res.json(user)
     } catch (err) {
       console.log('err', err)

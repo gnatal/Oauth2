@@ -12,7 +12,7 @@ export default class CreateUserService {
         user.email = email;
         user.password = hashIt(password);
         const session = await SessionCreateService.execute('213');
-        user.session = session;
+        user.sessions = [session];
         await userRepository.save(user);
         return user;
     }

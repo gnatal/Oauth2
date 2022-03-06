@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm'
 import {User} from './user'
 
 @Entity()
@@ -26,20 +26,12 @@ export class Session {
   })
   token: string
 
-  // @Column("double",{
-  //   nullable:true
-  // })
-  // tokenExpirationDate: number;
-
+  @ManyToOne(() => User, user => user.sessions)
+  user: User;
 
   @Column({
     nullable:true
   })
   refreshToken: string
-
-  // @Column("double",{
-  //   nullable:true
-  // })
-  // refreshTokenExpirationDate: number;
 
 }
