@@ -48,6 +48,13 @@ Features
     <li> [] Back-end demonstration app</li>
 <ol>
 
+<h3> Demonstration apps</h3>
+
+<ol>
+    <li> SPA usage <a href="https://github.com/gnatal/oauth2-spa-demo"> click here! </a>(as your main app)</li>
+    <li> Back-end <a href=""> click here! </a>usage (as a third party app)</li>
+<ol>
+
 
 <h1> License </h1>
 
