@@ -31,7 +31,7 @@ Features
     <br /> DAY_IN_SECONDS=86400  
 </p>
 
-<h2>To do </h2>
+<h1>To do </h2>
 <ol>
     <li> [x] Create user</li>
     <li> [x] Authenticate user</li>
@@ -48,7 +48,7 @@ Features
     <li> [] Back-end demonstration app</li>
 <ol>
 
-<h3> Demonstration apps</h3>
+<h1> Demonstration apps</h3>
 
 <ol>
     <li> SPA usage <a href="https://github.com/gnatal/oauth2-spa-demo"> click here! </a>(as your main app)</li>
