@@ -11,7 +11,7 @@ It's a working in progress
 </p>
 
 <br />
-Features
+<h1> Features </h1>
 <ol>
     <li>Create user</li>
     <li>Authenticate user</li>
@@ -24,14 +24,14 @@ Features
     <li>Issue Refresh tokens</li>
     <li>Validate Refresh tokens</li>
     <li>Create scopes</li>
-<ol>
+</ol>
 <p> you must create an .env file to and set the following properties 
     <br /> PORT=3000
     <br /> TOKEN_DURATION_SECONDS=14400
     <br /> DAY_IN_SECONDS=86400  
 </p>
 
-<h1>To do </h2>
+<h2>To do </h2>
 <ol>
     <li> [x] Create user</li>
     <li> [x] Authenticate user</li>
@@ -46,14 +46,14 @@ Features
     <li> [] Create scopes</li>
     <li> [] SPA demonstration app</li>
     <li> [] Back-end demonstration app</li>
-<ol>
+</ol>
 
-<h1> Demonstration apps</h3>
+<h2> Demonstration apps</h2>
 
 <ol>
     <li> SPA usage <a href="https://github.com/gnatal/oauth2-spa-demo"> click here! </a>(as your main app)</li>
     <li> Back-end <a href=""> click here! </a>usage (as a third party app)</li>
-<ol>
+</ol>
 
 
 <h1> License </h1>
