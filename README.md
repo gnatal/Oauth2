@@ -15,10 +15,39 @@ Features
 <ol>
     <li>Create user</li>
     <li>Authenticate user</li>
+    <li>Logout User</li>
+    <li>Create client</li>
+    <li>Grant Consent</li>
+    <li>Remove Consent</li>
     <li>Issue tokens</li>
     <li>Validate tokens</li>
+    <li>Issue Refresh tokens</li>
+    <li>Validate Refresh tokens</li>
+    <li>Create scopes</li>
 <ol>
-<p> you must create an .env file to set your PORT </p>
+<p> you must create an .env file to and set the following properties 
+    <br /> PORT=3000
+    <br /> TOKEN_DURATION_SECONDS=14400
+    <br /> DAY_IN_SECONDS=86400  
+</p>
+
+<h2>To do </h2>
+<ol>
+    <li> [x] Create user</li>
+    <li> [x] Authenticate user</li>
+    <li> [x] Logout User</li>
+    <li> [x] Create client</li>
+    <li> [] Grant Consent</li>
+    <li> [] Remove Consent</li>
+    <li> [x] Issue tokens</li>
+    <li> [x] Validate tokens</li>
+    <li> [] Issue Refresh tokens</li>
+    <li> [] Validate Refresh tokens</li>
+    <li> [] Create scopes</li>
+    <li> [] SPA demonstration app</li>
+    <li> [] Back-end demonstration app</li>
+<ol>
+
 
 <h1> License </h1>
 
