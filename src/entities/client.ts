@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm'
 import { ClientScope } from './clientScopes'
+import { User } from './user'
 @Entity()
 export class Client {
   @PrimaryGeneratedColumn()
@@ -23,5 +24,9 @@ export class Client {
   @OneToOne(() => ClientScope)
   @JoinColumn()
   scope:ClientScope
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  users: User[];
   
 }

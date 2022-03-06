@@ -11,11 +11,17 @@ import { decode, IJwtPayload } from '../../utils/jwt';
 import { compareIt } from '../../utils/password';
 import { authenticatePKCE } from '../../utils/pkce';
 import { IErrorUnauthorized } from '../../utils/error';
+import { Client } from '../../entities/client';
 
 interface IAuthController {
   email: string
   password: string
   pkce_hash: string
+}
+
+interface IClientGrant {
+  user_id: string;
+  client_id: string;
 }
 export class AuthController {
 
@@ -77,14 +83,37 @@ export class AuthController {
     }
   }
 
-  async consentGranted(req: Request<{}, {}, IAuthController>, res: Response){
+  async consentGranted(req: Request<{}, {}, IClientGrant>, res: Response){
     try{
-
+      const {client_id, user_id} = req.body;
+      const userRepository = getRepository(User);
+      const user = await userRepository.findOneOrFail({id: user_id});
+      const clientRepository = getRepository(Client);
+      const client = await clientRepository.findOneOrFail({id: client_id, relations: ["users"]});
+      client.users = [...client.users, user];
+      clientRepository.save(client);
+      return res.status(200).json({message: "consent granted"});
     }catch(e){
+      console.log('ERROR CONSENT GRANTED',e);
       return res.status(500).json({message:"consent failed"})
     }
   }
   
+  async consentRemove(req: Request<{}, {}, IClientGrant>, res: Response){
+    try{
+      const {client_id, user_id} = req.body;
+      const clientRepository = getRepository(Client);
+      const client = await clientRepository.findOneOrFail({id: client_id, relations: ["users"]});
+      client.users = client.users.filter(u => u.id !== user_id);
+      client.users = [...client.users, user];
+      clientRepository.save(client);
+      return res.status(200).json({message: "consent granted"});
+    }catch(e){
+      console.log('ERROR CONSENT GRANTED',e);
+      return res.status(500).json({message:"consent failed"})
+    }
+  }
+
   async tokenAuthentication(req: Request<{}, {}, {}>, res: Response){
     try{
       const token = ExtractTokenFromHeadersService.execute(req)

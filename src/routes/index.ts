@@ -5,6 +5,7 @@ import UserController from '../controllers/userController'
 import { AuthController } from '../controllers/authController'
 import ClientController from '../controllers/clientController'
 import ScopeController from '../controllers/scopeController'
+import { authenticateUser } from '../middlewares/auth'
 
 const userController = new UserController()
 const authController = new AuthController()
@@ -13,10 +14,11 @@ const scopeController = new ScopeController()
 const routes = Router()
 
 routes.post('/auth', authController.login)
-routes.get('/logout', authController.logout)
+routes.get('/logout', authenticateUser, authController.logout)
+routes.post('/grant_access',authenticateUser, authController.consentGranted)
 routes.post('/access_token', authController.validateAuthcodeSPA)
 
-routes.post('/client',clientController.create);
+routes.post('/client', authenticateUser ,clientController.create);
 routes.post('/scope',scopeController.create);
 
 routes.get('/healt', (req, res) => {

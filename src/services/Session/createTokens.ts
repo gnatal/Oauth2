@@ -12,11 +12,8 @@ export class SessionCreateTokenService{
 
     static async execute(session: Session, clientId:string, userId:string){
         try{
-
             session.token = encode({clientId,userId}, Number(tokenLife));
-            // session.tokenExpirationDate = (new Date()).getTime() + secondsToTimestamp(Number(tokenLife));
             session.refreshToken = encode({clientId,userId}, Number(refreshTokenLife));
-            // session.refreshTokenExpirationDate = (new Date()).getTime() + secondsToTimestamp(refreshTokenLife); // a week
             session.authCodeUsed = true;
             const sessionRepository = getRepository(Session);
             await sessionRepository.save(session)
