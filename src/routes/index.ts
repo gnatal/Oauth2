@@ -16,7 +16,12 @@ const routes = Router()
 routes.post('/auth', authController.login)
 routes.get('/logout', authenticateUser, authController.logout)
 routes.post('/grant_access',authenticateUser, authController.consentGranted)
+routes.put('/revoke_access',authenticateUser, authController.consentRemove)
 routes.post('/access_token', authController.validateAuthcodeSPA)
+
+routes.get('/validate_token', authController.tokenCheck)
+routes.get('/client_token', authController.getClientFromToken)
+
 
 routes.post('/client', authenticateUser ,clientController.create);
 routes.post('/scope',scopeController.create);
@@ -25,9 +30,6 @@ routes.get('/healt', (req, res) => {
   console.log('app is working')
   res.send('app is working')
 })
-
-routes.get('/tokenHealth', authController.tokenAuthentication)
-
 
 routes.post('/user', userController.create)
 

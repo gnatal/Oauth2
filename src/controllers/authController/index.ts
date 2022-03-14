@@ -12,6 +12,7 @@ import { compareIt } from '../../utils/password';
 import { authenticatePKCE } from '../../utils/pkce';
 import { IErrorUnauthorized } from '../../utils/error';
 import { Client } from '../../entities/client';
+import clientWithScopesService from '../../services/clientService/getClientWithScopes';
 
 interface IAuthController {
   email: string
@@ -34,7 +35,7 @@ export class AuthController {
       if (!user) {
         return res.status(401).json({ message: 'Login failed user not found' })
       }
-      if (compareIt(password, user.password)) {
+      if (user.checkPassord(password)) {
         const session = await SessionCreateService.execute(pkce_hash);
         user.sessions = [...user.sessions, session];
         userRepository.save(user);
@@ -105,25 +106,35 @@ export class AuthController {
       const clientRepository = getRepository(Client);
       const client = await clientRepository.findOneOrFail({id: client_id, relations: ["users"]});
       client.users = client.users.filter(u => u.id !== user_id);
-      client.users = [...client.users, user];
       clientRepository.save(client);
-      return res.status(200).json({message: "consent granted"});
+      return res.status(200).json({message: "consent remove success"});
     }catch(e){
       console.log('ERROR CONSENT GRANTED',e);
       return res.status(500).json({message:"consent failed"})
     }
   }
 
-  async tokenAuthentication(req: Request<{}, {}, {}>, res: Response){
-    try{
-      const token = ExtractTokenFromHeadersService.execute(req)
-      const tokenValue = decode(token);
-      return res.status(200).json({tokenValue});
-    }catch(e){
-      if( e instanceof IErrorUnauthorized)
-        return res.status(e.status).json({message: e.message, error: e.error});
+  async tokenCheck(req: Request<{}, {}, IJwtPayload>, res: Response){
+    try {
+        const token = ExtractTokenFromHeadersService.execute(req);
+        const payload = decode(token);
+        return res.status(200).json({ payload });
+    } catch(e) {
+      console.log(e)
+      return res.status(500).json({message:"error"})
     }
-    return res.status(400).json({error: "unknown error"});
+  }
+
+  async getClientFromToken(req: Request<{}, {}, IJwtPayload>, res: Response){
+    try {
+        const token = ExtractTokenFromHeadersService.execute(req);
+        const payload = decode(token);
+        const client = await clientWithScopesService.execute((payload.clientId as string));
+        return res.status(200).json({ client });
+    } catch(e) {
+      console.log(e)
+      return res.status(500).json({message:"error"})
+    }
   }
 
   async logout(req: Request<{}, {}, {}>, res: Response){

@@ -1,12 +1,13 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany} from 'typeorm'
 import { Session } from './session'
+import { compareIt } from '../utils/password'
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ select: false })
+  @Column()
   password: string
 
   @Column()
@@ -14,5 +15,9 @@ export class User {
 
   @OneToMany(() => Session, session => session.user)
   sessions: Session[];
+
+  checkPassord(password: string): boolean {
+    return compareIt(password, this.password)
+  }
 
 }

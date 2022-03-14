@@ -1,6 +1,8 @@
 {
-  "type": "sqlite",
-  "database": "database.sqlite",
+  "type": "mysql",
+  "database": "oauth2_data",
+  "username":"githublocaluser",
+  "password":"mypassword",
   "synchronize": true,
   "logging": false,
   "entities": ["src/entities/**/*.ts"],
