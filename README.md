@@ -26,8 +26,8 @@ It's a working in progress
     <li>Create scopes</li>
 </ol>
 <p> you must create an .env file to and set the following properties 
-    <br /> PORT=3000
-    <br /> TOKEN_DURATION_SECONDS=14400
+    <br /> PORT=your_port
+    <br /> TOKEN_DURATION_SECONDS=your_seconds
     <br /> DAY_IN_SECONDS=86400  
 </p>
 
@@ -43,15 +43,18 @@ It's a working in progress
     <li> [x] Validate tokens</li>
     <li> [] Issue Refresh tokens</li>
     <li> [] Validate Refresh tokens</li>
-    <li> [] Create scopes</li>
+    <li> [x] Create scopes</li>
     <li> [] SPA demonstration app</li>
-    <li> [] Back-end demonstration app</li>
+    <li> [x] Back-end demonstration app</li>
+    <li> [] Third-Party demonstration app</li>
 </ol>
 
 <h2> Demonstration apps</h2>
 
 <ol>
+    <li> Oauth server <a href="https://github.com/gnatal/oauth2"> click here! </a> as your authenticator and authorization</li>
     <li> SPA usage <a href="https://github.com/gnatal/oauth2-spa-demo"> click here! </a>(as your main app)</li>
+    <li> Back-end <a href="https://github.com/gnatal/Oauth2-data-server"> click here! </a>Using as a data server</li>
     <li> Back-end <a href=""> click here! </a>usage (as a third party app)</li>
 </ol>
 
