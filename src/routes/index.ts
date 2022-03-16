@@ -21,6 +21,7 @@ routes.post('/access_token', authController.validateAuthcodeSPA)
 
 routes.get('/validate_token', authController.tokenCheck)
 routes.get('/client_token', authController.getClientFromToken)
+routes.get('/refresh_token', authController.refreshToken)
 
 
 routes.post('/client', authenticateUser ,clientController.create);

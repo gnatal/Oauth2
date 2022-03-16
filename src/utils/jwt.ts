@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import {unauthorized} from './error';
+import {fakeToken, genericError, unauthorized} from './error';
 export interface IJwtPayload {
     userId:string;
     clientId:string;
@@ -30,9 +30,16 @@ export const decode = (token:string): string | jwt.JwtPayload =>{
     }
     catch(e){
         if(e instanceof jwt.TokenExpiredError){
+            console.log('ERROR DECODE EXPIRED',e)
             throw unauthorized('token expired');
         }
-        console.log('ERROR DECODING',e);
-        return {};
+        if(e instanceof jwt.JsonWebTokenError){
+            console.log('ERROR DECODE JWT',e)
+            throw fakeToken('invalid token');
+        }
+        else{
+            console.log('ERROR DECODE UNKNOWN',e)
+            throw genericError('unknow error');
+        }
     }
 }

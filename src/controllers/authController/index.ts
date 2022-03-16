@@ -13,6 +13,7 @@ import { authenticatePKCE } from '../../utils/pkce';
 import { IErrorUnauthorized } from '../../utils/error';
 import { Client } from '../../entities/client';
 import clientWithScopesService from '../../services/clientService/getClientWithScopes';
+import { SessionRefreshTokenService } from '../../services/Session/refreshToken';
 
 interface IAuthController {
   email: string
@@ -116,11 +117,14 @@ export class AuthController {
 
   async tokenCheck(req: Request<{}, {}, IJwtPayload>, res: Response){
     try {
+        console.log('token check', req.body);
         const token = ExtractTokenFromHeadersService.execute(req);
         const payload = decode(token);
         return res.status(200).json({ payload });
     } catch(e) {
-      console.log(e)
+      if(e instanceof IErrorUnauthorized){
+        return res.status(401).json({message: e.message});
+      }
       return res.status(500).json({message:"error"})
     }
   }
@@ -135,6 +139,19 @@ export class AuthController {
       console.log(e)
       return res.status(500).json({message:"error"})
     }
+  }
+
+  async refreshToken(req: Request<{}, {}, IJwtPayload>, res: Response){
+    try {
+      const token = ExtractTokenFromHeadersService.execute(req);
+      const payload = decode(token);
+      const session = await SessionRefreshTokenService.execute(token);
+      return res.status(200).json({ session });
+  } catch(e) {
+    console.log(e)
+    return res.status(500).json({message:"error"})
+  }
+
   }
 
   async logout(req: Request<{}, {}, {}>, res: Response){
