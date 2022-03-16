@@ -41,8 +41,8 @@ It's a working in progress
     <li> [] Remove Consent</li>
     <li> [x] Issue tokens</li>
     <li> [x] Validate tokens</li>
-    <li> [] Issue Refresh tokens</li>
-    <li> [] Validate Refresh tokens</li>
+    <li> [x] Issue Refresh tokens</li>
+    <li> [x] Validate Refresh tokens</li>
     <li> [x] Create scopes</li>
     <li> [] SPA demonstration app</li>
     <li> [x] Back-end demonstration app</li>
