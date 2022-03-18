@@ -4,12 +4,12 @@ import { getRepository } from 'typeorm'
 
 export class SessionDestroiService{
 
-    static async execute(sessionId:string){
+    static async execute(refreshToken:string){
         try{
             const sessionRepository = getRepository(Session);
             const session = await sessionRepository.findOne({
                 where:{
-                    id:sessionId
+                    refreshToken
                 }
             })
             if(session){

@@ -14,6 +14,7 @@ import { IErrorUnauthorized } from '../../utils/error';
 import { Client } from '../../entities/client';
 import clientWithScopesService from '../../services/clientService/getClientWithScopes';
 import { SessionRefreshTokenService } from '../../services/Session/refreshToken';
+import { SessionDestroiService } from '../../services/Session/delete';
 
 interface IAuthController {
   email: string
@@ -55,9 +56,12 @@ export class AuthController {
       const {authCode, pkce, client_id, user_id } = req.body;
       const sessionRepository = getRepository(Session);
       // const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
-      const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: pkce, relations: ["user"]})
+      const session = await sessionRepository.findOneOrFail({where:{authCode: authCode, pkceHash: pkce}, relations: ["user"]})
       // if(authenticatePKCE(pkce, session.pkceHash)){
       // }
+      if(session.authCodeUsed) {
+        return res.status(401).json({message: "authCode already used"});
+      }
       SessionCreateTokenService.execute(session,client_id,user_id)
       return res.status(200).json({ session })
     }catch(e){
@@ -68,7 +72,7 @@ export class AuthController {
 
   async validateAuthcodeServer(req: Request<{},{},any>, res: Response){
     try{
-      const {authCode, pkce, client_secret, client_id } = req.body;
+      const {authCode, pkce, client_secret, client_id } = req.body;''
       await CheckClientIdentityService.execute(client_id, client_secret);
       const sessionRepository = getRepository(Session);
       const session = await sessionRepository.findOneOrFail({authCode: authCode, pkceHash: sha256(pkce).toString()})
@@ -142,13 +146,19 @@ export class AuthController {
   }
 
   async refreshToken(req: Request<{}, {}, IJwtPayload>, res: Response){
+    const token = ExtractTokenFromHeadersService.execute(req);
     try {
-      const token = ExtractTokenFromHeadersService.execute(req);
       const payload = decode(token);
       const session = await SessionRefreshTokenService.execute(token);
       return res.status(200).json({ session });
   } catch(e) {
     console.log(e)
+    if(e instanceof IErrorUnauthorized){
+      if(e.message === "Token expired"){
+        await SessionDestroiService.execute(token);
+        return res.status(401).json({message: e.message});
+      }
+    }
     return res.status(500).json({message:"error"})
   }
 
