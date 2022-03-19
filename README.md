@@ -37,8 +37,8 @@ It's a working in progress
     <li> [x] Authenticate user</li>
     <li> [x] Logout User</li>
     <li> [x] Create client</li>
-    <li> [] Grant Consent</li>
-    <li> [] Remove Consent</li>
+    <li> [x] Grant Consent</li>
+    <li> [x] Remove Consent</li>
     <li> [x] Issue tokens</li>
     <li> [x] Validate tokens</li>
     <li> [x] Issue Refresh tokens</li>

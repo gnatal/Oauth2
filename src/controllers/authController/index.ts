@@ -1,6 +1,6 @@
 import sha256 from 'crypto-js/sha256';
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { EntityNotFoundError, getRepository } from 'typeorm';
 import { Session } from '../../entities/session';
 import { User } from '../../entities/user';
 import { ExtractTokenFromHeadersService } from '../../services/Auth/extractToken';
@@ -15,6 +15,7 @@ import { Client } from '../../entities/client';
 import clientWithScopesService from '../../services/clientService/getClientWithScopes';
 import { SessionRefreshTokenService } from '../../services/Session/refreshToken';
 import { SessionDestroiService } from '../../services/Session/delete';
+import { GetSessionByTokenService } from '../../services/Session/getSessionByToken';
 
 interface IAuthController {
   email: string
@@ -33,13 +34,14 @@ export class AuthController {
     try {
       const { email, password, pkce_hash } = req.body
       const userRepository = getRepository(User)
-      const user = await userRepository.findOne({ where: { email }, relations: ["sessions"] })
+      const user = await userRepository.findOne({ where: { email }, select: ['id','email','password'], relations: ["sessions"] })
       if (!user) {
-        return res.status(401).json({ message: 'Login failed user not found' })
+        return res.status(404).json({ message: 'Login failed user not found' })
       }
       if (user.checkPassord(password)) {
         const session = await SessionCreateService.execute(pkce_hash);
         user.sessions = [...user.sessions, session];
+        delete user.password;
         userRepository.save(user);
         return res.status(200).json({ authCode: session.authCode, user: user })
       } else {
@@ -62,10 +64,13 @@ export class AuthController {
       if(session.authCodeUsed) {
         return res.status(401).json({message: "authCode already used"});
       }
-      SessionCreateTokenService.execute(session,client_id,user_id)
+      await SessionCreateTokenService.execute(session,client_id,user_id)
       return res.status(200).json({ session })
     }catch(e){
       console.log(e)
+      if(e instanceof EntityNotFoundError){
+        return res.status(401).json({message: "authCode not found"});
+      }
       return res.status(500).json({message:"error"})
     }
   }
@@ -120,9 +125,8 @@ export class AuthController {
   }
 
   async tokenCheck(req: Request<{}, {}, IJwtPayload>, res: Response){
+    const token = ExtractTokenFromHeadersService.execute(req);
     try {
-        console.log('token check', req.body);
-        const token = ExtractTokenFromHeadersService.execute(req);
         const payload = decode(token);
         return res.status(200).json({ payload });
     } catch(e) {
@@ -151,17 +155,16 @@ export class AuthController {
       const payload = decode(token);
       const session = await SessionRefreshTokenService.execute(token);
       return res.status(200).json({ session });
-  } catch(e) {
-    console.log(e)
-    if(e instanceof IErrorUnauthorized){
-      if(e.message === "Token expired"){
-        await SessionDestroiService.execute(token);
-        return res.status(401).json({message: e.message});
+    } catch(e) {
+      console.log(e)
+      if(e instanceof IErrorUnauthorized){
+        if(e.message === "Token expired"){
+          await SessionDestroiService.execute(token);
+          return res.status(401).json({message: e.message});
+        }
       }
+      return res.status(500).json({message:"error"})
     }
-    return res.status(500).json({message:"error"})
-  }
-
   }
 
   async logout(req: Request<{}, {}, {}>, res: Response){

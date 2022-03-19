@@ -14,6 +14,7 @@ export default class CreateUserService {
         const session = await SessionCreateService.execute('213');
         user.sessions = [session];
         await userRepository.save(user);
+        delete user.password;
         return user;
     }
 }

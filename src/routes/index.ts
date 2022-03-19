@@ -25,6 +25,8 @@ routes.get('/refresh_token', authController.refreshToken)
 
 
 routes.post('/client', authenticateUser ,clientController.create);
+routes.post('/consent_grant', authenticateUser ,userController.grantConsent);
+routes.post('/consent_revoke', authenticateUser ,userController.revokeConsent);
 routes.post('/scope',scopeController.create);
 
 routes.get('/healt', (req, res) => {

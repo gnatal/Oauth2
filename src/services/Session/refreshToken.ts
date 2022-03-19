@@ -14,18 +14,15 @@ export class SessionRefreshTokenService{
                     refreshToken
                 }
             })
-            if(session){
-                const payload = (decode(refreshToken) as IJwtPayload);
-                if(payload){
-                    const token = encode({clientId:payload.clientId,userId:payload.userId}, Number(process.env.TOKEN_DURATION_SECONDS));
-                    session.token = token;
-                    await sessionRepository.save(session)
-                    return session;
-                } else {
-                    throw "error refresh token invalid";
-                }
+            const payload = (decode(refreshToken) as IJwtPayload);
+            if(payload){
+                const token = encode({clientId:payload.clientId,userId:payload.userId}, Number(process.env.TOKEN_DURATION_SECONDS));
+                session.token = token;
+                await sessionRepository.save(session)
+                return session;
+            } else {
+                throw "error refresh token invalid";
             }
-            return  true;
         }catch(e){
             return e;
         }
